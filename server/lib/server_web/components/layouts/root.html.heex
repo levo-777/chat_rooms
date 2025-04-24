@@ -10,10 +10,11 @@
       window.user_id  = "<%= @user_id || "" %>";
       window.username = "<%= @username || "" %>";
     </script>
-    <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}>
-    </script>
   </head>
   <body class="bg-white">
+    <div>
+      <h1>CHAT ROOMS</h1>
+    </div>
     {@inner_content}
   </body>
 </html>

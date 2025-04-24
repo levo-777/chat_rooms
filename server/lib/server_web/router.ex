@@ -19,7 +19,8 @@ defmodule ServerWeb.Router do
   scope "/", ServerWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
+    get "/", IndexController, :index
+    post "/set-username", IndexController, :set_username
   end
 
 end
