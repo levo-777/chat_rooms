@@ -12,7 +12,7 @@ defmodule Server.Application do
       {DNSCluster, query: Application.get_env(:server, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: Server.PubSub},
       {Server.Rooms.RoomServer, []},
-      Server.Presence,
+      Server.Rooms.Presence,
       ServerWeb.Endpoint
     ]
 

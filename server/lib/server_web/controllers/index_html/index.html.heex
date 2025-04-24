@@ -1,5 +1,5 @@
 <!-- Container -->
-<div class="flex flex-row">
+<div>
 
 <!-- Username Section -->
 <div>
@@ -15,7 +15,25 @@
     </div>
 </div>
 
+<!-- New Room Section -->
+<div>
+    <div>
+        <h3>New Room: </h3>
+    </div>
+    <div>
+        <input id="new_room_input_tag" maxlength="12" placeholder="NEW ROOM">
+        <button id="new_room_button">NEW ROOM</button>
+    </div>
+</div>
 
+<div>
+    <div>
+        <h3>Join Room: </h3>
+    </div>
+    <div id="rooms_container">
+        <!-- dynamicly generate rooms -->
+    </div>
+</div>
 
 </div>
 <script defer phx-track-static type="text/javascript" src={~p"/assets/index.js"}></script>

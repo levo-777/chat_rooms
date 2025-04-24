@@ -1,24 +1,41 @@
 defmodule ServerWeb.RoomChannel do
   use ServerWeb, :channel
 
+  alias Server.Rooms.{RoomServer, Room}
+  alias Server.Rooms.Presence
+
   @impl true
   def join("room:lobby", _payload, socket) do
-    {:ok, socket}
+    user_id = socket.assigns.user_id
+
+    {:ok, _} = Presence.track(self(), "room:lobby", user_id, %{})
+
+    {:ok, raw_rooms} = RoomServer.list_rooms()
+
+    rooms_payload =
+      Enum.map(raw_rooms, fn %Room{room_id: room_id, room_name: room_name} ->
+        presences = Presence.list("room:#{room_id}")
+        %{
+          room_id: room_id,
+          room_name: room_name,
+          user_count: map_size(presences)
+        }
+      end)
+
+    {:ok, %{rooms: rooms_payload}, socket}
   end
 
-  # Channels can be used in a request/response fashion
-  # by sending replies to requests from the client
+
+
+
+
+
+
   @impl true
-  def handle_in("ping", payload, socket) do
-    {:reply, {:ok, payload}, socket}
+  def handle_in("create-room", %{"room_name" => room_name}, socket) do
+
   end
 
-  # It is also common to receive messages from the client and
-  # broadcast to everyone in the current topic (room:lobby).
-  @impl true
-  def handle_in("shout", payload, socket) do
-    broadcast(socket, "shout", payload)
-    {:noreply, socket}
-  end
+
 
 end
