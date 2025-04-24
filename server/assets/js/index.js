@@ -34,12 +34,18 @@ let set_username_post_req = (username) =>
         .then(response => response.json())
         .then(data => 
             {
+                if(!data.success)
+                {
+                    alert(data.message || "Username update failed!");
+                }
                 set_username_dom(data.username);
+            })
+        .catch(error => 
+            {
+                alert("Error setting username:", error);
             });
+        
 }
-
-
-
 
 // SOCKET AND EVENT LISTENERS 
 
