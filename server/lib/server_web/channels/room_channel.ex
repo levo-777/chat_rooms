@@ -25,17 +25,4 @@ defmodule ServerWeb.RoomChannel do
     {:ok, %{rooms: rooms_payload}, socket}
   end
 
-
-
-
-
-
-
-  @impl true
-  def handle_in("create-room", %{"room_name" => room_name}, socket) do
-
-  end
-
-
-
 end
