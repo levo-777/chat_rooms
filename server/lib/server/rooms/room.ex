@@ -22,5 +22,8 @@ defmodule Server.Rooms.Room do
     %{room | users: users ++ [{user_id, username}]}
   end
 
+  def has_user?(%__MODULE__{users: users}, user_id) do
+    Enum.any?(users, fn {uid, _} -> uid == user_id end)
+  end
 
 end

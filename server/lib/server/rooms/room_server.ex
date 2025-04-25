@@ -15,6 +15,10 @@ defmodule Server.Rooms.RoomServer do
     GenServer.call(__MODULE__, :list_rooms)
   end
 
+  def join_room(room_id, user_id, username) do
+    GenServer.call(__MODULE__, {:join_room, room_id, user_id, username})
+  end
+
   @impl true
   def init(_init_arg) do
     {:ok, %RoomTable{}}
@@ -38,4 +42,22 @@ defmodule Server.Rooms.RoomServer do
     rooms = RoomTable.list_rooms(table)
     {:reply, {:ok, rooms}, table}
   end
+
+  @impl true
+  def handle_call({:join_room, room_id, user_id, username}, _from, table) do
+    case RoomTable.get_room(table, room_id) do
+      nil ->
+        {:reply, {:error, :room_not_found}, table}
+      room ->
+        if Room.has_user?(room, user_id) do
+          {:reply, {:ok, room}, table}
+        else
+          updated_room = Room.add_user(room, user_id, username)
+          updated_table = RoomTable.put_room(table, room_id, updated_room)
+          {:reply, {:ok, updated_room}, updated_table}
+        end
+    end
+  end
+
+
 end
