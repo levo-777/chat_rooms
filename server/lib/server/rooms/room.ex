@@ -22,8 +22,21 @@ defmodule Server.Rooms.Room do
     %{room | users: users ++ [{user_id, username}]}
   end
 
+  def renove_user(%__MODULE__{users: users} = room, user_id) do
+    %{room | users: Enum.reject(users, fn {uid, _} -> uid == user_id end)}
+  end
+
+  def get_users(%__MODULE__{users: users}) do
+    users
+  end
+
   def has_user?(%__MODULE__{users: users}, user_id) do
     Enum.any?(users, fn {uid, _} -> uid == user_id end)
+  end
+
+  def add_message(%__MODULE__{messages: messages} = room, from, msg, msg_id) do
+    new_message = %{from: from, msg: msg, msg_id: msg_id}
+    %{room | messages: messages ++ [new_message]}
   end
 
 end

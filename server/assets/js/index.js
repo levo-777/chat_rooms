@@ -114,7 +114,7 @@ let render_room_dom = (rooms) =>
         room_title_tag.className = "p-1 sm:p-2";
 
         let span_name_label = document.createElement("span");
-        span_name_label.className = "font-normal";
+        span_name_label.className = "font-mono";
         span_name_label.innerHTML = `Room Name:&ensp;`;
 
         let span_name_value = document.createElement("span");
@@ -157,11 +157,12 @@ let render_room_dom = (rooms) =>
                 let room_id = button_id.split("-")[0];
                 try
                 {
-                    window.location.href `/rooms/${room_id}`;
+                    window.location.href = `/rooms/${room_id}`;
                 }
                 catch(error)
                 {
                     alert("Error: Unable to join the room.");
+                    console.log(error);
                 }
             });
 
@@ -223,14 +224,12 @@ new_room_button.addEventListener("click", ()=>
 
 channel.join()
     .receive("ok", resp => 
-    { 
-        console.log("Joined lobby", resp);
+    {
         set_username_dom(session_username);
         remove_old_rooms_dom(resp.rooms);
         render_room_dom(resp.rooms); 
       })
     .receive("error", resp => 
-      { 
-        console.log("Failed to join lobby", resp);
+      {
         alert("Failed to join lobby", resp); 
       });

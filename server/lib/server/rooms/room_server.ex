@@ -23,6 +23,10 @@ defmodule Server.Rooms.RoomServer do
     GenServer.call(__MODULE__, {:get_room, room_id})
   end
 
+  def user_in_room?(room_id, user_id) do
+    GenServer.call(__MODULE__,{:user_in_room?, room_id, user_id})
+  end
+
 
   @impl true
   def init(_init_arg) do
@@ -69,6 +73,17 @@ defmodule Server.Rooms.RoomServer do
     case RoomTable.get_room(table, room_id) do
       nil -> {:reply, {:error, :room_not_found}, table}
       room -> {:reply, {:ok, room}, table}
+    end
+  end
+
+  @impl true
+  def handle_call({:user_in_room?, room_id, user_id}, _from, table) do
+    case RoomTable.get_room(table, room_id) do
+      nil ->
+        {:reply, {:error, :room_not_found}, table}
+      room ->
+        result = Room.has_user?(room, user_id)
+        {:reply, {:ok, result}, table}
     end
   end
 
