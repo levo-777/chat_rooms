@@ -21,6 +21,8 @@ const exit_btn = document.getElementById("exit_btn");
 const chat_input = document.getElementById("chat_input");
 const send_button = document.getElementById("send_button");
 
+const message_container = document.getElementById("message_container");
+
 let render_room_id_dom = (room_id) =>
 {
     chat_room_id.innerText = room_id;
@@ -36,6 +38,40 @@ let render_chat_user_count_dom = (user_count) =>
     chat_user_count.innerText = user_count;
 }
 
+let render_message_dom = (messages) =>
+{
+    messages.forEach(message => 
+        {
+            const { msg_id, from, from_id, msg } = message;
+
+            if (document.getElementById(msg_id))
+                {
+                    return; 
+                }
+                    
+                const message_div = document.createElement("div");
+                message_div.id = msg_id;
+                message_div.className = "mb-2";
+                    
+                if (from === "Server")
+                {
+                message_div.innerHTML = `
+                <h4 class="text-xs sm:text-sm text-gray-500 italic">
+                <span class="font-mono font-bold">server#${from_id}:</span> ${msg}
+                </h4>
+                `;
+                }
+                else
+                {
+                message_div.innerHTML = `
+                <h3 class="text-sm sm:text-base">
+                <span class="font-mono font-bold">${from}#${from_id}:</span> ${msg}
+                </h3>
+                `;
+                }
+                message_container.appendChild(message_div);
+        })
+}
 
 // SOCKET & EVENT LISTENERS 
 
@@ -86,15 +122,15 @@ send_button.addEventListener("click", () =>
 
 channel.on("user-joined", (payload) => 
     {
-        console.log("user-joined ", payload);
+        //
     })
 
 channel.on("room-info", (payload) => 
     {
-        console.log("ROOM-INFO: ", payload);
         render_room_id_dom(payload.room.room_id);
         render_room_name_dom(payload.room.room_name);
         render_chat_user_count_dom(payload.room.user_count);
+        render_message_dom(payload.room.messages);
     });
     
 channel.join()

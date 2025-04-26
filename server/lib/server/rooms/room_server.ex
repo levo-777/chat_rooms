@@ -39,6 +39,10 @@ defmodule Server.Rooms.RoomServer do
     GenServer.call(__MODULE__, {:delete_room, room_id})
   end
 
+  def delete_room_if_empty(room_id) do
+    GenServer.call(__MODULE__,{:delete_room_if_empty, room_id})
+  end
+
   @impl true
   def init(_init_arg) do
     {:ok, %RoomTable{}}
@@ -132,6 +136,18 @@ defmodule Server.Rooms.RoomServer do
     end
   end
 
+  @impl true
+  def handle_call({:delete_room_if_empty, room_id}, _from, table) do
+    case RoomTable.get_room(table, room_id) do
+      {:ok, %Room{users: []}} ->
+        RoomTable.delete_room(table, room_id)
+      {:ok, _room} ->
+        :noop
+      _ ->
+        :noop
+    end
+  {:noreply, table}
+  end
 
 
 end

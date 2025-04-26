@@ -178,7 +178,6 @@ let render_room_dom = (rooms) =>
 
 channel.on("rooms-update", (payload) => 
     {
-        console.log("ROOMS-UDPATE ", payload);
         remove_old_rooms_dom(payload.rooms);
         render_room_dom(payload.rooms);
         new_room_input_tag.value = "";
@@ -225,7 +224,6 @@ new_room_button.addEventListener("click", ()=>
 channel.join()
     .receive("ok", resp => 
     {
-        console.log("JOINED: ", resp);
         set_username_dom(session_username);
         remove_old_rooms_dom(resp.rooms);
         render_room_dom(resp.rooms); 
