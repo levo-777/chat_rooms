@@ -185,7 +185,14 @@ channel.on("rooms-update", (payload) =>
 
 channel.on("redirect-ready", (payload) => 
     {
-        //
+        try
+        {
+            window.location.href = "/rooms/" + payload.room_id;
+        }
+        catch(error)
+        {
+            alert("Redirection Failed")
+        }
     });
 
 

@@ -21,7 +21,7 @@ defmodule ServerWeb.Router do
 
     get "/", IndexController, :index
     post "/set-username", IndexController, :set_username
-    get "/rooms/:id", RoomController, :show
+    get "/rooms/:room_id", RoomController, :room
   end
 
 end

@@ -29,8 +29,39 @@ defmodule ServerWeb.RoomChannel do
     #   {:error, :room_not_found} ->
     #     {:error, %{reason: "Room not found"}}
     # end
-
   #end
+  @impl true
+  def join("room:" <> room_id, _payload, socket) do
+    user_id = socket.assigns.user_id
+    username = socket.assigns.username
+
+    case RoomServer.join_room(room_id, user_id, username) do
+      {:ok, _room} ->
+        {:ok, _} = Presence.track(self(), "room:" <> room_id, user_id, %{username: username})
+        send(self(), :after_join)
+        {:ok, assign(socket, :room_id, room_id)}
+      {:error, :room_not_found} ->
+        {:error, %{reason: "Room not found"}}
+    end
+  end
+
+  @impl true
+  def handle_info(:after_join, socket) do
+    user_id = socket.assigns.user_id
+    username = socket.assigns.username
+    room_id = socket.assigns.room_id
+    topic = "room:" <> room_id
+
+    presences = Presence.list(topic)
+
+    unless Map.has_key?(presences, user_id) do
+      broadcast!(socket, "user-joined", %{message: "#{username}##{user_id} joined"})
+    end
+
+    room_payload = payload_rooms(room_id)
+    push(socket, "room-info", %{room: room_payload})
+    {:noreply, socket}
+  end
 
 
   #@impl true
@@ -98,6 +129,19 @@ end
   defp payload_rooms do
     {:ok, raw_rooms} = RoomServer.list_rooms()
     format_rooms(raw_rooms)
+  end
+
+  defp payload_rooms(room_id) do
+    case RoomServer.get_room(room_id) do
+      {:ok, %Room{room_id: id, room_name: name, users: users, messages: messages}} ->
+        %{
+          room_id: id,
+          room_name: name,
+          user_count: length(users),
+          messages: messages
+        }
+      _ -> nil
+    end
   end
 
   # defp payload_room_with_presence(room_id) do
