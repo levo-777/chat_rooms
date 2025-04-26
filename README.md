@@ -1,4 +1,4 @@
-## chat_rooms
+## Chat Rooms
 
 https://chatrooms.gigalixirapp.com/
 
