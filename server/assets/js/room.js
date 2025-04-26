@@ -38,6 +38,11 @@ let render_chat_user_count_dom = (user_count) =>
     chat_user_count.innerText = user_count;
 }
 
+let scrollToBottom = () => 
+    {
+        message_container.scrollTop = message_container.scrollHeight;
+    }
+
 let render_message_dom = (messages) =>
 {
     messages.forEach(message => 
@@ -71,6 +76,7 @@ let render_message_dom = (messages) =>
                 }
                 message_container.appendChild(message_div);
         })
+    scrollToBottom();
 }
 
 // SOCKET & EVENT LISTENERS 
