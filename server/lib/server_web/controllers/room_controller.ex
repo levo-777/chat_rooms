@@ -7,7 +7,7 @@ defmodule ServerWeb.RoomController do
     case RoomServer.get_room(room_id) do
       {:ok, _room} ->
         render(conn, :room, layout: false)
-      {:error, :not_found} ->
+      {:error, :room_not_found} ->
         conn
         |> redirect(to: ~p"/")
     end

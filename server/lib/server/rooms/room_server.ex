@@ -27,6 +27,17 @@ defmodule Server.Rooms.RoomServer do
     GenServer.call(__MODULE__,{:user_in_room?, room_id, user_id})
   end
 
+  def leave_room(room_id, user_id) do
+    GenServer.call(__MODULE__,{:leave_room, room_id, user_id})
+  end
+
+  def add_message(room_id, from, from_id, msg) do
+    GenServer.call(__MODULE__, {:add_message, room_id, from, from_id, msg})
+  end
+
+  def delete_room(room_id) do
+    GenServer.call(__MODULE__, {:delete_room, room_id})
+  end
 
   @impl true
   def init(_init_arg) do
@@ -86,5 +97,41 @@ defmodule Server.Rooms.RoomServer do
         {:reply, {:ok, result}, table}
     end
   end
+
+  @impl true
+  def handle_call({:leave_room, room_id, user_id}, _from, table) do
+    case RoomTable.get_room(table,room_id) do
+      nil -> {:reply, {:error, :room_not_found}, table}
+      room ->
+        updated_room = Room.remove_user(room, user_id)
+        updated_table = RoomTable.put_room(table, room_id, updated_room)
+        {:reply, {:ok, updated_room}, updated_table}
+    end
+  end
+
+  @impl true
+  def handle_call({:delete_room, room_id}, _from, table) do
+    case RoomTable.get_room(table, room_id) do
+      nil -> {:reply, {:error, :room_not_found}, table}
+      _room ->
+        updated_table = RoomTable.delete_room(table, room_id)
+        {:reply, {:ok, room_id}, updated_table}
+    end
+  end
+
+  @impl true
+  def handle_call({:add_message, room_id, from, from_id, msg}, _from, table) do
+    case RoomTable.get_room(table, room_id) do
+      nil ->
+        {:reply, {:error, :room_not_found}, table}
+      room ->
+        msg_id = :crypto.strong_rand_bytes(6) |> Base.encode16(case: :lower)
+        updated_room = Room.add_message(room, from, from_id, msg, msg_id)
+        updated_table = RoomTable.put_room(table, room_id, updated_room)
+        {:reply, {:ok, msg_id}, updated_table}
+    end
+  end
+
+
 
 end
