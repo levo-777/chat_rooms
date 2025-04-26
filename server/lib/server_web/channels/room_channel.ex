@@ -36,8 +36,8 @@ defmodule ServerWeb.RoomChannel do
   @impl true
   def handle_info(:after_join, socket) do
     room_id = socket.assigns.room_id
-
-    RoomServer.add_message(room_id, "Server", "!", "#{socket.assigns.username}##{socket.assigns.user_id} joined")
+    server_id = :crypto.strong_rand_bytes(6) |> Base.encode16(case: :lower)
+    RoomServer.add_message(room_id, "Server", server_id, "#{socket.assigns.username}##{socket.assigns.user_id} joined")
 
     room_payload = payload_rooms(room_id)
     broadcast!(socket, "room-info", %{room: room_payload})
@@ -61,8 +61,8 @@ defmodule ServerWeb.RoomChannel do
         broadcast!(socket, "room-info", %{room: room_payload})
       _ -> :ok
     end
-
-    RoomServer.add_message(room_id, "Server", "!", "#{socket.assigns.username}##{socket.assigns.user_id} left")
+    server_id = :crypto.strong_rand_bytes(6) |> Base.encode16(case: :lower)
+    RoomServer.add_message(room_id, "Server", server_id, "#{socket.assigns.username}##{socket.assigns.user_id} left")
     ServerWeb.Endpoint.broadcast!("room:lobby", "rooms-update", %{rooms: payload_rooms()})
     {:reply, {:ok, %{}}, socket}
   end
@@ -108,27 +108,32 @@ defmodule ServerWeb.RoomChannel do
     {:noreply, socket}
   end
 
-  # @impl true
-  # def terminate(_reason, socket) do
-  #   if room_id = socket.assigns[:room_id] do
-  #     user_id = socket.assigns.user_id
+  @impl true
+  def terminate(_reason, socket) do
+    if room_id = socket.assigns[:room_id] do
+      user_id = socket.assigns.user_id
+      username = socket.assigns.username
 
-  #     {:ok, _} = RoomServer.leave_room(room_id, user_id)
-
-  #     case RoomServer.get_room(room_id) do
-  #       {:ok, %Room{users: []}} ->
-  #         RoomServer.delete_room(room_id)
-  #         {:noreply, socket}
-  #       _ ->
-  #         room_payload = payload_rooms(room_id)
-  #         broadcast!(socket, "room-info", %{room: room_payload})
-  #         {:noreply, socket}
-  #     end
-  #   end
-
-  #   broadcast!(socket, "rooms-update", %{rooms: payload_rooms()})
-  #   {:noreply, socket}
-  # end
+      case RoomServer.leave_room(room_id, user_id) do
+        {:ok, _} ->
+          case RoomServer.get_room(room_id) do
+            {:ok, %Room{users: []}} ->
+              RoomServer.delete_room(room_id)
+            {:ok, _room} ->
+              server_id = :crypto.strong_rand_bytes(6) |> Base.encode16(case: :lower)
+              RoomServer.add_message(room_id, "Server", server_id, "#{username}##{user_id} left")
+              room_payload = payload_rooms(room_id)
+              broadcast!(socket, "room-info", %{room: room_payload})
+            _ ->
+              :noop
+          end
+          ServerWeb.Endpoint.broadcast!("room:lobby", "rooms-update", %{rooms: payload_rooms()})
+        {:error, :room_not_found} ->
+          :ok
+      end
+    end
+    :ok
+  end
 
   defp payload_rooms do
     {:ok, raw_rooms} = RoomServer.list_rooms()

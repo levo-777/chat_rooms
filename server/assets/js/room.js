@@ -97,4 +97,10 @@ channel.on("room-info", (payload) =>
         render_chat_user_count_dom(payload.room.user_count);
     });
     
-channel.join();
+channel.join()
+    .receive("ok", ()=> {})
+    .receive("error", () => 
+        {
+            alert("Rejoining failed");
+            window.location.href = "/";
+        })
