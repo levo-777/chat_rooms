@@ -119,7 +119,7 @@ defmodule ServerWeb.RoomChannel do
           case RoomServer.get_room(room_id) do
             {:ok, %Room{users: []}} ->
               #RoomServer.delete_room(room_id)
-              Process.send_after(self(), {:delete_room_if_empty, room_id}, 5_000)
+              Process.send_after(self(), {:delete_room_if_empty, room_id}, 3_000)
             {:ok, _room} ->
               server_id = :crypto.strong_rand_bytes(6) |> Base.encode16(case: :lower)
               RoomServer.add_message(room_id, "Server", server_id, "#{username}##{user_id} left")
