@@ -32,6 +32,7 @@ defmodule ServerWeb.RoomChannel do
 
   #end
 
+
   #@impl true
   #def handle_info(:after_join, socket) do
     # user_id = socket.assigns.user_id
@@ -69,6 +70,7 @@ defmodule ServerWeb.RoomChannel do
   #       {:noreply, socket}
   #   end
   # end
+
 @impl true
 def handle_in("create-room", %{"room_name" => room_name}, socket) do
   user_id = socket.assigns.user_id
@@ -98,14 +100,14 @@ end
     format_rooms(raw_rooms)
   end
 
-  defp payload_room_with_presence(room_id) do
-    case RoomServer.get_room(room_id) do
-      {:ok, %Room{room_id: id, room_name: name}} ->
-        presences = Presence.list("room:" <> id)
-        %{room_id: id, room_name: name, user_count: map_size(presences)}
-      _ -> nil
-    end
-  end
+  # defp payload_room_with_presence(room_id) do
+  #   case RoomServer.get_room(room_id) do
+  #     {:ok, %Room{room_id: id, room_name: name}} ->
+  #       presences = Presence.list("room:" <> id)
+  #       %{room_id: id, room_name: name, user_count: map_size(presences)}
+  #     _ -> nil
+  #   end
+  # end
 
 
   def format_rooms(raw_rooms) do
@@ -115,12 +117,12 @@ end
     end)
   end
 
-  defp format_rooms_with_presence(raw_rooms) do
-    Enum.map(raw_rooms, fn %Room{room_id: id, room_name: name} ->
-      presences = Presence.list("room:" <> id)
-      %{room_id: id, room_name: name, user_count: map_size(presences)}
-    end)
-  end
+  # defp format_rooms_with_presence(raw_rooms) do
+  #   Enum.map(raw_rooms, fn %Room{room_id: id, room_name: name} ->
+  #     presences = Presence.list("room:" <> id)
+  #     %{room_id: id, room_name: name, user_count: map_size(presences)}
+  #   end)
+  # end
 
   #simple templates
   # defp format_rooms(raw_rooms) do

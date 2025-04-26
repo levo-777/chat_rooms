@@ -22,6 +22,7 @@ const rooms_list = document.querySelector("#rooms_list");
 let set_username_dom = (username) => 
 {
     username_title_tag.innerText = username;
+    username_input_tag.value = "";
 }
 
 let set_username_post_req = (username) =>
@@ -62,38 +63,21 @@ let remove_old_rooms_dom = (rooms) =>
     old_ids.forEach(id => { rooms_list.removeChild(document.getElementById(id)) });
 }
 
-function update_room_user_count(room_id, new_user_count) {
-    const id = `${room_id}-user_count`;
-    const el = document.getElementById(id);
-    if (!el) return;                        // not rendered yet?
-  
-    const current = parseInt(el.innerText, 10);
-    // make sure new_user_count is a Number
-    const updated = Number(new_user_count);
-    if (current !== updated) {
-      el.innerText = updated;
-    }
-  }
-
-let update_room_user_count = (room_id, new_user_count) =>
+let update_room_user_count = (room_id, new_user_count) => 
 {
-    let user_count_id = room_id + "-user_count";
+    let user_count_id = `${room_id}-user_count`;
     let user_count_dom = document.getElementById(user_count_id);
-    let user_count;
-    
-    if(!user_count_dom)
+    if (!user_count_dom)
     {
         return;
-    }
+    } 
+  
     
-    user_count = user_count_dom.innerText.trim();
-    new_user_count = new_user_count.trim();
-
-    if(user_count !== new_user_count)
+    if (user_count_dom.innerText.trim() !== String(new_user_count)) 
     {
-        user_count_dom.innerText = new_user_count;
+      user_count_dom.innerText = new_user_count;
     }
-}   
+}
 
 let render_room_dom = (rooms) => 
 {
@@ -201,8 +185,7 @@ channel.on("rooms-update", (payload) =>
 
 channel.on("redirect-ready", (payload) => 
     {
-        console.log("redirect-ready");
-        console.log(payload);
+        //
     });
 
 
