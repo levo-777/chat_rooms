@@ -56,16 +56,16 @@ let render_message_dom = (messages) =>
                 if (from === "Server")
                 {
                 message_div.innerHTML = `
-                <h4 class="text-xs sm:text-sm text-gray-500 italic">
-                <span class="font-mono font-bold">server#${from_id}:</span> ${msg}
+                <h4 id="${from_id}" class="text-xs sm:text-sm text-gray-500 italic">
+                <span id="${msg_id}" class="font-mono font-bold">server#:</span> ${msg}
                 </h4>
                 `;
                 }
                 else
                 {
                 message_div.innerHTML = `
-                <h3 class="text-sm sm:text-base">
-                <span class="font-mono font-bold">${from}#${from_id}:</span> ${msg}
+                <h3 id="${from_id} class="text-sm sm:text-base">
+                <span id="${msg_id}" class="font-mono font-bold">${from}:</span> ${msg}
                 </h3>
                 `;
                 }
@@ -127,6 +127,7 @@ channel.on("user-joined", (payload) =>
 
 channel.on("room-info", (payload) => 
     {
+        console.log("ROOM-INFO:", payload);
         render_room_id_dom(payload.room.room_id);
         render_room_name_dom(payload.room.room_name);
         render_chat_user_count_dom(payload.room.user_count);

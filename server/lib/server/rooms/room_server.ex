@@ -109,6 +109,12 @@ defmodule Server.Rooms.RoomServer do
       room ->
         updated_room = Room.remove_user(room, user_id)
         updated_table = RoomTable.put_room(table, room_id, updated_room)
+
+        if updated_room.users == [] do
+          # send a msg to self() in 3000ms
+          Process.send_after(self(), {:delete_room_if_empty, room_id}, 15_000)
+        end
+
         {:reply, {:ok, updated_room}, updated_table}
     end
   end
@@ -116,10 +122,23 @@ defmodule Server.Rooms.RoomServer do
   @impl true
   def handle_call({:delete_room, room_id}, _from, table) do
     case RoomTable.get_room(table, room_id) do
-      nil -> {:reply, {:error, :room_not_found}, table}
-      _room ->
+       nil -> {:reply, {:error, :room_not_found}, table}
+       _room ->
+         updated_table = RoomTable.delete_room(table, room_id)
+         {:reply, {:ok, room_id}, updated_table}
+     end
+  end
+
+  @impl true
+  def handle_call({:delete_room_if_empty, room_id}, _from, table) do
+    case RoomTable.get_room(table, room_id) do
+      nil ->
+        {:reply, {:error, :room_not_found}, table}
+      %Room{users: []} ->
         updated_table = RoomTable.delete_room(table, room_id)
         {:reply, {:ok, room_id}, updated_table}
+      _ ->
+        {:reply, {:ok, :room_not_empty}, table}
     end
   end
 
@@ -137,17 +156,21 @@ defmodule Server.Rooms.RoomServer do
   end
 
   @impl true
-  def handle_call({:delete_room_if_empty, room_id}, _from, table) do
-    case RoomTable.get_room(table, room_id) do
-      {:ok, %Room{users: []}} ->
-        RoomTable.delete_room(table, room_id)
-      {:ok, _room} ->
-        :noop
-      _ ->
-        :noop
-    end
-  {:noreply, table}
-  end
-
-
+   def handle_info({:delete_room_if_empty, room_id}, table) do
+     case RoomTable.get_room(table, room_id) do
+       nil ->
+         {:noreply, table}
+       %Room{users: []} ->
+          updated_table = RoomTable.delete_room(table, room_id)
+          raw_rooms = RoomTable.list_rooms(updated_table)
+          new_rooms = Enum.map(raw_rooms, fn %Room{ room_id: id, room_name: name, users: users } ->
+            user_count = length(users)
+            %{room_id: id, room_name: name, user_count: user_count}
+            end)
+         ServerWeb.Endpoint.broadcast!("room:lobby", "rooms-update", %{rooms: new_rooms})
+         {:noreply, updated_table}
+       _room ->
+         {:noreply, table}
+     end
+   end
 end
