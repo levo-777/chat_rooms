@@ -1,0 +1,40 @@
+<div id="chat_room_info" class="grid grid-cols-1 sm:grid-cols-5 gap-1 sm:gap-4 p-2 sm:p-4 rounded-lg text-xs sm:text-sm mb-4">
+  <h4 class="p-1 sm:p-2 whitespace-nowrap">
+    <span class="font-bold">Room ID:</span>
+    <span class="font-normal" id="chat_room_id"></span>
+  </h4>
+  <h4 class="p-1 sm:p-2 whitespace-nowrap">
+    <span class="font-bold">Room Name:</span>
+    <span class="font-normal" id="chat_room_name"></span>
+  </h4>
+  <h4 class="p-1 sm:p-2 whitespace-nowrap">
+    <span class="font-bold">Users:</span>
+    <span class="font-normal" id="chat_user_count"></span>
+  </h4>
+  <h4 class="p-1 sm:p-2 whitespace-nowrap">
+    <button id="copy_link_btn" class="font-medium bg-blue-500 text-white rounded-lg py-2 px-4 hover:bg-blue-600 transition duration-300">
+      Copy Link
+  </button>
+  </h4>
+  <h4 class="p-1 sm:p-2 whitespace-nowrap">
+    <button id="exit_btn" class="font-medium bg-red-500 text-white rounded-lg py-2 px-4 hover:bg-red-600 transition duration-300">
+      Exit Room
+    </button>
+  </h4>
+</div>
+
+<div id="message_container" class="h-64 sm:h-80 p-4 border-2 border-gray-300 rounded-lg overflow-y-auto mb-4 bg-white">
+  <!-- dynamically append messages here -->
+</div>
+
+<div class="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0">
+  
+  <div class="relative flex-1">
+    <textarea id="chat_input" rows="2" maxlength="500" placeholder="Type your message..." class="w-full h-full p-3 border-2 border-gray-300 rounded-lg resize-none focus:outline-none focus:border-blue-500 text-sm"></textarea>
+  </div>
+
+  <button id="send_button" class="w-full sm:w-auto h-12 px-4 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 focus:outline-none whitespace-nowrap">
+    Send
+  </button>
+</div>
+<script defer phx-track-static type="text/javascript" src={~p"/assets/room.js"}></script>

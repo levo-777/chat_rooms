@@ -62,84 +62,130 @@ let remove_old_rooms_dom = (rooms) =>
     old_ids.forEach(id => { rooms_list.removeChild(document.getElementById(id)) });
 }
 
-let update_room_user_count = (new_user_count) => 
-{
-    return;
-}
+function update_room_user_count(room_id, new_user_count) {
+    const id = `${room_id}-user_count`;
+    const el = document.getElementById(id);
+    if (!el) return;                        // not rendered yet?
+  
+    const current = parseInt(el.innerText, 10);
+    // make sure new_user_count is a Number
+    const updated = Number(new_user_count);
+    if (current !== updated) {
+      el.innerText = updated;
+    }
+  }
 
-
-let render_room_dom = (rooms) =>
+let update_room_user_count = (room_id, new_user_count) =>
 {
-    rooms.forEach(({ room_id, room_name, user_count }) => 
+    let user_count_id = room_id + "-user_count";
+    let user_count_dom = document.getElementById(user_count_id);
+    let user_count;
+    
+    if(!user_count_dom)
+    {
+        return;
+    }
+    
+    user_count = user_count_dom.innerText.trim();
+    new_user_count = new_user_count.trim();
+
+    if(user_count !== new_user_count)
+    {
+        user_count_dom.innerText = new_user_count;
+    }
+}   
+
+let render_room_dom = (rooms) => 
+{
+    rooms.forEach(({ room_id, room_name, user_count }) => {
+        let room_element = document.getElementById(room_id);
+        if (room_element) 
         {
-            let room_element = document.getElementById(room_id);
-            if(room_element)
+            update_room_user_count(room_id, user_count);
+            return;
+        }
+
+        let room_container = document.createElement('div');
+        room_container.id = room_id;
+        room_container.className = "grid grid-cols-1 sm:grid-cols-4 gap-1 sm:gap-4 p-2 sm:p-4 border-2 border-gray-300 rounded-lg text-xs sm:text-sm";
+
+        // --- Room ID ---
+        let room_title_id_tag = document.createElement("h4");
+        room_title_id_tag.className = "p-1 sm:p-2";
+
+        let span_id_label = document.createElement("span");
+        span_id_label.className = "font-mono";
+        span_id_label.innerHTML = `Room ID:&ensp;&ensp;`;
+
+        let span_id_value = document.createElement("span");
+        span_id_value.className = "font-bold";
+        span_id_value.innerText = room_id;
+
+        room_title_id_tag.appendChild(span_id_label);
+        room_title_id_tag.appendChild(span_id_value);
+        room_container.appendChild(room_title_id_tag);
+
+        // --- Room Name ---
+        let room_title_tag = document.createElement("h4");
+        room_title_tag.className = "p-1 sm:p-2";
+
+        let span_name_label = document.createElement("span");
+        span_name_label.className = "font-normal";
+        span_name_label.innerHTML = `Room Name:&ensp;`;
+
+        let span_name_value = document.createElement("span");
+        span_name_value.className = "font-bold";
+        span_name_value.innerText = room_name;
+
+        room_title_tag.appendChild(span_name_label);
+        room_title_tag.appendChild(span_name_value);
+        room_container.appendChild(room_title_tag);
+
+        // --- User Count ---
+        let user_count_tag = document.createElement("h4");
+        user_count_tag.className = "p-1 sm:p-2";
+
+        let span_user_label = document.createElement("span");
+        span_user_label.className = "font-mono";
+        span_user_label.innerHTML = `Users:&ensp;`;
+
+        let span_user_value = document.createElement("span");
+        span_user_value.id = room_id + "-user_count";
+        span_user_value.className = "font-bold";
+        span_user_value.innerText = user_count;
+
+        user_count_tag.appendChild(span_user_label);
+        user_count_tag.appendChild(span_user_value);
+        room_container.appendChild(user_count_tag);
+
+        // --- Join Button ---
+        let button_container = document.createElement("div");
+        button_container.className = "p-1 sm:p-2 flex items-center justify-center";
+
+        let join_button = document.createElement("button");
+        join_button.id = room_id + "-join_button";
+        join_button.className = "w-full sm:w-auto h-8 sm:h-10 sm:h-12 px-2 sm:px-4 bg-blue-500 text-white font-semibold rounded-lg hover:bg-blue-600 focus:outline-none";
+        join_button.innerText = "JOIN";
+
+        join_button.addEventListener("click", (event) => 
             {
-                //update_room_user_count(room_element);
-                return;
-            }
+                let button_id = event.target.id;
+                let room_id = button_id.split("-")[0];
+                try
+                {
+                    window.location.href `/rooms/${room_id}`;
+                }
+                catch(error)
+                {
+                    alert("Error: Unable to join the room.");
+                }
+            });
 
-            let room_container = document.createElement('div');
-            room_container.id = room_id;
-            room_container.className = "grid grid-cols-1 sm:grid-cols-4 gap-1 sm:gap-4 p-2 sm:p-4 border-2 border-gray-300 rounded-lg text-xs sm:text-sm";
+        button_container.appendChild(join_button);
+        room_container.appendChild(button_container);
 
-            let room_title_id_tag = document.createElement("h4");
-            room_title_id_tag.className = "p-1 sm:p-2";
-
-            let span_1 = document.createElement("span");
-            let span_2 = document.createElement("span");
-
-            span_1.className = "font-mono";
-            span_1.innerHTML = `Room ID:&ensp;&ensp;&ensp;`
-
-            span_2.className = "font-bold";
-            span_2.innerText = room_id;
-
-            room_title_id_tag.appendChild(span_1);
-            room_title_id_tag.appendChild(span_2);
-            room_container.appendChild(room_title_id_tag);
-
-            span_1.className = ""
-            span_1.innerText = "";
-
-            span_2.className = "";
-            span_2.innerText = "";
-
-            let room_title_tag = document.createElement("h4");
-            room_title_tag.className = "p-1 sm:p-2";
-
-            span_1.className = "font-normal";
-            span_1.innerHTML = `Room Name:&ensp;`;
-
-            span_2.className = "font-bold";
-            span_2.innerText = room_name;
-
-            room_title_tag.appendChild(span_1);
-            room_title_tag.appendChild(span_2);
-            room_container.appendChild(room_title_tag);
-
-            span_1.className = ""
-            span_1.innerText = "";
-
-            span_2.className = "";
-            span_2.innerText = "";
-
-            new_id = room_id + "-user_count";
-
-            let user_count_tag = document.createElement("h4");
-            user_count_tag.className = "p-1 sm:p-2"
-            
-            span_1.className = "font-normal";
-            span_1.innerHTML = `Users:&ensp;`;
-
-            span_2.id = new_id;
-            span_2.className = "font-bold";
-            span_2.innerText = user_count;
-
-            user_count_tag.appendChild(span_1);
-            user_count_tag.appendChild(span_2);
-
-        });
+        rooms_list.appendChild(room_container);
+    });
 }
 
 
@@ -148,8 +194,16 @@ let render_room_dom = (rooms) =>
 channel.on("rooms-update", (payload) => 
     {
         console.log(payload);
-        //remove_old_rooms_dom(payload.rooms);
-    })
+        remove_old_rooms_dom(payload.rooms);
+        render_room_dom(payload.rooms);
+        new_room_input_tag.value = "";
+    });
+
+channel.on("redirect-ready", (payload) => 
+    {
+        console.log("redirect-ready");
+        console.log(payload);
+    });
 
 
 new_username_button.addEventListener("click", ()=> 
@@ -172,15 +226,7 @@ new_room_button.addEventListener("click", ()=>
             alert("Room Name required");
             return;
         }
-        channel.push("create-room", {room_name: room_name})
-        .receive("ok", (response) => 
-            {
-                console.log(response);
-            })
-        .receive("error", (response) => 
-            {
-                console.log(response);
-            });    
+        channel.push("create-room", {room_name: room_name})   
     });
 
 
@@ -190,7 +236,8 @@ channel.join()
     { 
         console.log("Joined lobby", resp);
         set_username_dom(session_username);
-        //remove_old_rooms_dom(resp.rooms); 
+        remove_old_rooms_dom(resp.rooms);
+        render_room_dom(resp.rooms); 
       })
     .receive("error", resp => 
       { 
