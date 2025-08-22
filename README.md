@@ -1,7 +1,5 @@
 ## Chat Rooms
 
-https://chatrooms.gigalixirapp.com/
-
 Minimalisitic chat rooms where you can set username , open rooms and chat temporary
 
 ## Tech Stack
