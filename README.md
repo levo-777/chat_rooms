@@ -8,7 +8,8 @@ Minimalistic chat rooms where you can set username, open rooms and chat temporar
 
 ## 📝 Project Disclaimer
 
-**This is a simple learning project to try out Elixir and Phoenix framework.** Everything is stored in memory with no encryption and no security guarantees. This project was created for educational purposes to explore real-time web applications with Phoenix WebChannels. Do not use this in production environments.
+**This is a simple learning project to try out Elixir and Phoenix framework.** Everything is stored in memory with no encryption and no security guarantees. This project was created for educational purposes to explore real-time web applications with Phoenix WebChannels.
+
 
 ## Tech Stack
 - **Elixir** ~> 1.14
