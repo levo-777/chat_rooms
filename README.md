@@ -122,3 +122,7 @@ docker build -t chat-rooms . && docker run -p 4000:4000 chat-rooms
 ```
 
 Then open **http://localhost:4000** and wait 1-2 minutes for the WebSocket connection to establish!
+
+## 🌐 Making it Public
+
+**Note:** To make your chat rooms publicly accessible, you can use tunneling services like ngrok (`ngrok http 4000`) or deploy to cloud platforms like Railway, Fly.io, or Heroku. For public hosting, set the `PHX_HOST` environment variable to your domain (e.g., `PHX_HOST=yourdomain.com`) and the WebSocket connections will automatically work with your domain.
