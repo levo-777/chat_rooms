@@ -6,6 +6,10 @@ Minimalistic chat rooms where you can set username, open rooms and chat temporar
 
 **Please wait 1-2 minutes after the website loads!** The WebSocket connection takes time to establish. You'll see "WebSocket connection: Success" in the browser console when it's ready. The chat functionality will work once the connection is established.
 
+## 📝 Project Disclaimer
+
+**This is a simple learning project to try out Elixir and Phoenix framework.** Everything is stored in memory with no encryption and no security guarantees. This project was created for educational purposes to explore real-time web applications with Phoenix WebChannels. Do not use this in production environments.
+
 ## Tech Stack
 - **Elixir** ~> 1.14
 - **Phoenix** ~> 1.7.21 & Phoenix WebChannels
