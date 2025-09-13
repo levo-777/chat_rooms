@@ -94,7 +94,7 @@ node --version
 
 ## 🌐 Making it Public
 
-**Note:** To make your chat rooms publicly accessible, you can use tunneling services like ngrok (`ngrok http 4000`) or deploy to cloud platforms like Railway, Fly.io, or Heroku. For public hosting, set the `PHX_HOST` environment variable to your domain (e.g., `PHX_HOST=yourdomain.com`) and the WebSocket connections will automatically work with your domain.
+**Note:** To make your chat rooms publicly accessible, you can use tunneling services like ngrok (`ngrok http 4000`) or deploy to cloud platforms like Railway, Fly.io, or Heroku. For public hosting, set the `PHX_HOST` environment variable to your domain (e.g., `PHX_HOST=yourdomain.com`). WebSocket connections should work automatically with most tunneling services and cloud platforms.
 
 ## 🔧 Troubleshooting
 
@@ -104,7 +104,8 @@ node --version
 - Refresh the page if connection fails
 - **For public hosting**: Set `PHX_HOST=yourdomain.com` environment variable
 - **For tunneling**: WebSocket connections work automatically with ngrok and similar services
-- **URL mismatch**: Ensure WebSocket URL matches your domain (ws://yourdomain.com/socket/websocket)
+- **URL mismatch**: Check browser console for WebSocket connection errors
+- **CORS issues**: Most tunneling services handle this automatically
 
 ### Docker Issues
 - Ensure port 4000 is not in use: `docker ps`
