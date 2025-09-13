@@ -14,7 +14,7 @@ Minimalistic chat rooms where you can set username, open rooms and chat temporar
 
 ## 🐳 Docker (Recommended)
 
-### Build and Run
+### Basic Version (Local Access)
 ```bash
 # Build the Docker image
 docker build -t chat-rooms .
@@ -24,6 +24,36 @@ docker run -p 4000:4000 chat-rooms
 ```
 
 Access at: **http://localhost:4000**
+
+### With Public Tunneling (WebSocket Compatible)
+```bash
+# Build with free tunneling (Cloudflare Tunnel)
+docker build -f Dockerfile.tunnel-free -t chat-rooms-tunnel .
+
+# Run with public access
+docker run -p 4000:4000 chat-rooms-tunnel
+```
+
+This provides **full WebSocket support** using [Cloudflare Tunnel](https://github.com/cloudflare/cloudflared) and displays the public URL in the console!
+
+**Expected Console Output:**
+```
+🚀 Starting Chat Rooms with Cloudflare Tunnel...
+
+Starting Phoenix server...
+Starting Cloudflare Tunnel...
+Creating public tunnel with full WebSocket support...
+Your public URL will appear below:
+Note: Cloudflare Tunnel provides excellent WebSocket support!
+
++----------------------------------------------------------------------------------+
+|  Your quick Tunnel has been created! Visit it at (it may take some time to be  |
+|  ready):                                                                         |
+|  https://abc123-def456.trycloudflare.com                                        |
++----------------------------------------------------------------------------------+
+```
+
+**⚠️ Important Note:** Cloudflare Tunnel is a free service that may change or become unavailable. If the tunnel fails to start, you can use alternative tunneling services like [ngrok](https://ngrok.com/) or deploy to cloud platforms like Railway, Fly.io, or Heroku.
 
 ### Create and Load Docker Image for Other Machines
 
