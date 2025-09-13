@@ -30,7 +30,7 @@ docker run -p 4000:4000 chat-rooms
 
 Access at: **http://localhost:4000**
 
-### With Public Tunneling (WebSocket Compatible)
+### With Public Tunneling (Cloudflare Tunnel) (WebSocket Compatible)
 ```bash
 # Build with free tunneling (Cloudflare Tunnel)
 docker build -f Dockerfile.tunnel-free -t chat-rooms-tunnel .
