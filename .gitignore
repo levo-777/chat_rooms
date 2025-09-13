@@ -1,0 +1,30 @@
+# Docker images (too large for GitHub)
+*.tar
+*.tar.gz
+*.docker
+
+# Docker build cache
+.docker/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp
