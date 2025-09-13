@@ -58,7 +58,7 @@ Note: Cloudflare Tunnel provides excellent WebSocket support!
 +----------------------------------------------------------------------------------+
 ```
 
-**⚠️ Important Note:** Cloudflare Tunnel is a free service that may change or become unavailable. If the tunnel fails to start, you can use alternative tunneling services like [ngrok](https://ngrok.com/) or others ... or deploy to cloud platforms like Railway, Fly.io, or Heroku.
+**⚠️ Important Note:** Cloudflare Tunnel is a free service that may change or become unavailable. If the tunnel fails to start, you can use alternative tunneling services like [ngrok](https://ngrok.com/) or alternatives ... or deploy to cloud platforms like Railway, Fly.io, or Heroku.
 
 ### Create and Load Docker Image for Other Machines
 
